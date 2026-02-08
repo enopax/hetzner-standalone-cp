@@ -1,0 +1,16 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: K0sWorkerConfigTemplate
+metadata:
+  name: {{ include "k0sworkerconfigtemplate.name" . }}
+spec:
+  template:
+    spec:
+      version: {{ .Values.k0s.version }}
+      {{- with .Values.workerConfig.preInstallCommands }}
+      preInstallCommands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.workerConfig.postStartCommands }}
+      postStartCommands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

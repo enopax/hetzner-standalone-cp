@@ -1,0 +1,49 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: HetznerCluster
+metadata:
+  name: {{ include "cluster.name" . }}
+  finalizers:
+    - k0rdent.mirantis.com/cleanup
+spec:
+  controlPlaneRegions:
+    - {{ .Values.region }}
+  {{- if .Values.sshKeyNames }}
+  sshKeys:
+    hcloud:
+    {{- range .Values.sshKeyNames }}
+      - name: {{ . }}
+    {{- end }}
+  {{- end }}
+  hcloudTokenRef:
+    name: {{ .Values.tokenRef.name }}
+    key: {{ .Values.tokenRef.key }}
+  {{- if .Values.placementGroupName }}
+  placementGroups:
+    - name: {{ .Values.placementGroupName }}
+      type: spread
+  {{- end }}
+  {{- if .Values.labels }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+  {{- end }}
+  controlPlaneLoadBalancer:
+    enabled: true
+    region: {{ .Values.region }}
+    type: lb11
+    extraServices:
+      # k0s controller join API
+      - destinationPort: 9443
+        listenPort: 9443
+        protocol: tcp
+    {{- if .Values.controlPlaneLoadBalancer }}
+    {{- with .Values.controlPlaneLoadBalancer.extraServices }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- end }}
+  controlPlaneEndpoint:
+    host: ""
+    port: 6443
+  hetznerSecretRef:
+    name: {{ .Values.tokenRef.name }}
+    key:
+      hcloudToken: {{ .Values.tokenRef.key }}
