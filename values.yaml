@@ -53,8 +53,8 @@ k0s: # @schema description: k0s specific settings; type: object
 controlPlaneConfig: # @schema description: The configuration of k0s; type: object
   args: # @schema description: Extra arguments passed to the k0s controller; type: array; item: string
     - --labels="kca/control-plane=true"
-  downloadURL: # @schema description: The URL from which to download k0s binary; type: string
-  k0s: # @schema description: k0s configuration; type: object
+  downloadURL: "" # @schema description: The URL from which to download k0s binary; type: string
+  k0s: {} # @schema description: k0s configuration; type: object
   postStartCommands: [] # @schema title: Post-start commands; description: Additional commands to run after k0s start; type: array; item: string
   preInstallCommands: [] # @schema title: Pre-install commands; description: Additional commands to run before k0s install; type: array; item: string
 
