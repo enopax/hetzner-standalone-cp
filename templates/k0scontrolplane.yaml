@@ -121,6 +121,9 @@ spec:
                   args:
                     cluster-cidr: {{ first .Values.clusterNetwork.pods.cidrBlocks }}
                     allocate-node-cidrs: "true"
+                    {{- if not .Values.hcloudNetwork.enabled }}
+                    allow-untagged-cloud: "true"
+                    {{- end }}
                   env:
                     HCLOUD_TOKEN:
                       valueFrom:
