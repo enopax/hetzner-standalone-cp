@@ -11,4 +11,4 @@ description: 'A KCM template to deploy a k0s cluster on Hetzner Cloud with boots
   control plane nodes. '
 name: hetzner-standalone-cp
 type: application
-version: 1.0.13
+version: 1.0.14
