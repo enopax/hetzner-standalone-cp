@@ -119,8 +119,8 @@ spec:
                     repository: {{ $global.registry }}/hetznercloud/hcloud-cloud-controller-manager
                   {{- end }}
                   args:
-                    - --cluster-cidr={{ first .Values.clusterNetwork.pods.cidrBlocks }}
-                    - --allocate-node-cidrs=true
+                    cluster-cidr: {{ first .Values.clusterNetwork.pods.cidrBlocks }}
+                    allocate-node-cidrs: "true"
                   env:
                     HCLOUD_TOKEN:
                       valueFrom:
