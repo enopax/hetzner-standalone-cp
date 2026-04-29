@@ -48,13 +48,10 @@ spec:
     preInstallCommands:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- if or $global.registryCertSecret $global.k0sURLCertSecret .Values.controlPlaneConfig.postStartCommands (eq (int .Values.workersNumber) 0) }}
+    {{- if or $global.registryCertSecret $global.k0sURLCertSecret .Values.controlPlaneConfig.postStartCommands }}
     postStartCommands:
     {{- if or $global.registryCertSecret $global.k0sURLCertSecret }}
     - "sudo update-ca-certificates"
-    {{- end }}
-    {{- if eq (int .Values.workersNumber) 0 }}
-    - "for i in $(seq 1 60); do k0s kubectl taint node $(hostname) node-role.kubernetes.io/control-plane:NoSchedule- 2>/dev/null && break || sleep 5; done"
     {{- end }}
     {{- with .Values.controlPlaneConfig.postStartCommands }}
       {{- toYaml . | nindent 6 }}
