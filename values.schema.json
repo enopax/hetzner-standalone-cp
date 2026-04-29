@@ -82,7 +82,10 @@
           "type": "string"
         }
       },
-      "required": ["image", "type"]
+      "required": [
+        "image",
+        "type"
+      ]
     },
     "controlPlaneConfig": {
       "description": "The configuration of k0s",
@@ -135,7 +138,9 @@
           "type": "string"
         }
       },
-      "required": ["version"]
+      "required": [
+        "version"
+      ]
     },
     "labels": {
       "description": "Labels to apply to Hetzner resources",
@@ -167,7 +172,10 @@
     "tokenRef": {
       "description": "Reference to the secret containing Hetzner API token",
       "type": "object",
-      "required": ["name", "key"],
+      "required": [
+        "name",
+        "key"
+      ],
       "properties": {
         "key": {
           "description": "Key in the secret containing the token",
@@ -210,7 +218,10 @@
           "type": "string"
         }
       },
-      "required": ["image", "type"]
+      "required": [
+        "image",
+        "type"
+      ]
     },
     "workerConfig": {
       "description": "The configuration of the k0s worker",
@@ -236,7 +247,7 @@
     },
     "workersNumber": {
       "description": "The number of the worker machines",
-      "minimum": 1,
+      "minimum": 0,
       "type": "integer"
     }
   }
