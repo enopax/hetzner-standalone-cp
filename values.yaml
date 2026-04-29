@@ -24,6 +24,9 @@ labels: {} # @schema description: Labels to apply to Hetzner resources; type: ob
 controlPlaneLoadBalancer: # @schema description: Control plane load balancer configuration; type: object
   extraServices: [] # @schema description: Additional services to expose through the load balancer; type: array; item: object
 
+hcloudNetwork: # @schema description: Hetzner private network configuration; type: object
+  enabled: false # @schema description: Enable Hetzner private network; type: boolean
+
 # Hetzner machines parameters
 controlPlane: # @schema description: The configuration of the control plane machines; type: object
   image: ubuntu-22.04 # @schema description: The name of the Hetzner server image; type: string; required: true
