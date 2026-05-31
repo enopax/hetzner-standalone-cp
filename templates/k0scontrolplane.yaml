@@ -72,9 +72,13 @@ spec:
           {{- with .Values.k0s.api.extraArgs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
-        {{- with .Values.k0s.network }}
-        network: {{ toYaml . | nindent 10 }}
-        {{- end }}
+        network:
+          provider: custom
+          podCIDR: {{ first .Values.clusterNetwork.pods.cidrBlocks }}
+          serviceCIDR: {{ first .Values.clusterNetwork.services.cidrBlocks }}
+          {{- with .Values.k0s.network }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
         {{- if $global.registry }}
         images:
           metricsserver:
@@ -97,8 +101,8 @@ spec:
           helm:
             {{- if not $global.registry }}
             repositories:
-              - name: mirantis
-                url: https://charts.mirantis.com
+              - name: cilium
+                url: https://helm.cilium.io/
               - name: hcloud
                 url: https://charts.hetzner.cloud
               - name: jetstack
@@ -107,6 +111,21 @@ spec:
                 url: https://charts.containeroo.ch
             {{- end }}
             charts:
+              - name: cilium
+                chartname: cilium/cilium
+                version: "1.19.4"
+                namespace: kube-system
+                values: |
+                  routingMode: tunnel
+                  tunnelProtocol: vxlan
+                  operator:
+                    replicas: 1
+                  ipam:
+                    mode: cluster-pool
+                    operator:
+                      clusterPoolIPv4PodCIDRList:
+                        - {{ first .Values.clusterNetwork.pods.cidrBlocks }}
+                      clusterPoolIPv4MaskSize: 24
               - name: hcloud-cloud-controller-manager
                 namespace: kube-system
                 {{- if $global.registry }}
