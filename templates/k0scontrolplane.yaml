@@ -133,7 +133,7 @@ spec:
                 {{- else }}
                 chartname: hcloud/hcloud-cloud-controller-manager
                 {{- end }}
-                version: "1.20.0"
+                version: "1.31.1"
                 values: |
                   nodeSelector:
                     node-role.kubernetes.io/control-plane: "true"
