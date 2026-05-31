@@ -156,11 +156,11 @@ spec:
               - name: hcloud-csi
                 namespace: kube-system
                 {{- if $global.registry }}
-                chartname: oci://{{ $global.registry }}/charts/hcloud-csi-driver
+                chartname: oci://{{ $global.registry }}/charts/hcloud-csi
                 {{- else }}
-                chartname: hcloud/hcloud-csi-driver
+                chartname: hcloud/hcloud-csi
                 {{- end }}
-                version: "2.9.0"
+                version: "2.21.1"
                 values: |
                   {{- if $global.registry }}
                   controller:
