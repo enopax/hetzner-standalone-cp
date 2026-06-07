@@ -7,9 +7,7 @@ spec:
     spec:
       imageName: {{ .Values.controlPlane.image }}
       type: {{ .Values.controlPlane.type }}
-      {{- if .Values.controlPlane.placementGroupName }}
-      placementGroupName: {{ .Values.controlPlane.placementGroupName }}
-      {{- end }}
+      placementGroupName: {{ .Values.controlPlane.placementGroupName | default "cp-spread" }}
       {{- with .Values.controlPlane.dataDisks }}
       dataDisks:
         {{- toYaml . | nindent 8 }}

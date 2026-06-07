@@ -19,7 +19,8 @@ sshKeyNames: [] # @schema description: SSH key names to use for cluster nodes; t
 tokenRef: # @schema description: Reference to the secret containing Hetzner API token; type: object
   name: "" # @schema description: Name of the secret; type: string; required: true
   key: "hcloud-token" # @schema description: Key in the secret containing the token; type: string; required: true
-placementGroupName: "" # @schema description: Name of the placement group to use for nodes; type: string
+# placementGroupName is deprecated — placement groups are now always created
+# Use controlPlane.placementGroupName and worker.placementGroupName to override names
 labels: {} # @schema description: Labels to apply to Hetzner resources; type: object; additionalProperties: true
 controlPlaneLoadBalancer: # @schema description: Control plane load balancer configuration; type: object
   extraServices: [] # @schema description: Additional services to expose through the load balancer; type: array; item: object

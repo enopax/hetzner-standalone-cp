@@ -8,9 +8,7 @@ spec:
     spec:
       imageName: {{ .Values.worker.image }}
       type: {{ .Values.worker.type }}
-      {{- if .Values.worker.placementGroupName }}
-      placementGroupName: {{ .Values.worker.placementGroupName }}
-      {{- end }}
+      placementGroupName: {{ .Values.worker.placementGroupName | default "worker-spread" }}
       {{- with .Values.worker.dataDisks }}
       dataDisks:
         {{- toYaml . | nindent 8 }}

@@ -14,14 +14,11 @@ spec:
       - name: {{ . }}
     {{- end }}
   {{- end }}
-  hcloudTokenRef:
-    name: {{ .Values.tokenRef.name }}
-    key: {{ .Values.tokenRef.key }}
-  {{- if .Values.placementGroupName }}
-  placementGroups:
-    - name: {{ .Values.placementGroupName }}
+  hcloudPlacementGroups:
+    - name: {{ .Values.controlPlane.placementGroupName | default "cp-spread" }}
       type: spread
-  {{- end }}
+    - name: {{ .Values.worker.placementGroupName | default "worker-spread" }}
+      type: spread
   {{- if .Values.labels }}
   labels:
     {{- toYaml .Values.labels | nindent 4 }}
