@@ -201,6 +201,14 @@ spec:
                   installCRDs: true
                   startupapicheck:
                     enabled: false
+                  # Enable cert-manager's Gateway API integration (feature gate +
+                  # gateway/httproute RBAC) so its gateway-shim auto-issues certs
+                  # for Gateway listeners annotated with cert-manager.io/cluster-issuer
+                  # (e.g. the KOF Envoy gateway -> vmauth/grafana TLS via HTTP-01).
+                  config:
+                    apiVersion: controller.config.cert-manager.io/v1alpha1
+                    kind: ControllerConfiguration
+                    enableGatewayAPI: true
               - name: local-path-provisioner
                 namespace: local-path-storage
                 {{- if $global.registry }}
@@ -210,8 +218,10 @@ spec:
                 {{- end }}
                 version: "0.0.32"
                 values: |
+                  # Keep hcloud-volumes as the single default StorageClass; a second
+                  # default (local-path) makes KOF PVCs ambiguous and they never bind.
                   storageClass:
-                    defaultClass: true
+                    defaultClass: false
         {{- if .Values.controlPlaneConfig.k0s }}
         {{- toYaml .Values.controlPlaneConfig.k0s | nindent 8 }}
         {{- else }}
