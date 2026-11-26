@@ -134,8 +134,9 @@
       "type": "object",
       "properties": {
         "version": {
-          "description": "The k0s version to use",
-          "type": "string"
+          "description": "The k0s version to use, in k0s release notation (vX.Y.Z+k0s.N). The counter matters: the chart derives the form the kubelet reports (vX.Y.Z+k0s) for Machine.spec.version from it, and k0smotron needs the release notation to install. See enopax/enopax#56.",
+          "type": "string",
+          "pattern": "^v\\d+\\.\\d+\\.\\d+\\+k0s\\.\\d+$"
         }
       },
       "required": [

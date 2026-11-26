@@ -27,3 +27,32 @@ jobs:
             --set k0s.version=v1.32.6+k0s.0 \
             --set controlPlane.type=cpx22 \
             --set worker.type=cpx22
+
+      # Zwei Schreibweisen derselben Fassung, und sie sind nicht
+      # austauschbar: das MachineDeployment traegt die Form, die der Knoten
+      # meldet (vX.Y.Z+k0s), das K0sWorkerConfigTemplate die
+      # k0s-Release-Nummer (vX.Y.Z+k0s.N). Stand hier die falsche, galten die
+      # Arbeiter des Regionals dauerhaft als veraltet - enopax/enopax#56.
+      - name: Die Fassung steht in beiden Formen an der richtigen Stelle
+        run: |
+          render() {
+            helm template test . \
+              --set region=nbg1 --set tokenRef.name=hcloud-token \
+              --set controlPlane.type=cpx22 --set worker.type=cpx22 \
+              --set k0s.version="$1"
+          }
+          out=$(render v1.32.6+k0s.0)
+
+          md=$(printf '%s' "$out" | awk '/kind: MachineDeployment/,0' | grep -m1 -E '^      version:' | awk '{print $2}')
+          test "$md" = "v1.32.6+k0s" || { echo "MachineDeployment: $md, erwartet v1.32.6+k0s" >&2; exit 1; }
+
+          wc=$(printf '%s' "$out" | awk '/kind: K0sWorkerConfigTemplate/,0' | grep -m1 -E '^      version:' | awk '{print $2}')
+          test "$wc" = "v1.32.6+k0s.0" || { echo "WorkerConfig: $wc, erwartet v1.32.6+k0s.0" >&2; exit 1; }
+
+          # Und die Release-Nummer ist Pflicht: ohne Zaehler wuerde k0smotron
+          # aus der gemeldeten Form `v1.32.6+k0s+k0s.0` machen.
+          if render v1.32.6 >/dev/null 2>&1; then
+            echo "Schema hat eine Fassung ohne +k0s.N angenommen" >&2; exit 1
+          fi
+          echo "beide Formen richtig, und das Schema haelt"
+
